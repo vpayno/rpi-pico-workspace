@@ -13,3 +13,5 @@ CHANGELOG.md            @vpayno
 
 # tool configuration files
 .gitignore              @vpayno
+.yamlfix.yaml           @vpayno
+.yamllint.yaml          @vpayno
