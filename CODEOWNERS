@@ -10,3 +10,6 @@ CODEOWNERS              @vpayno
 LICENSE*                @vpayno
 README.md               @vpayno
 CHANGELOG.md            @vpayno
+
+# tool configuration files
+.gitignore              @vpayno
