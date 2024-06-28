@@ -26,3 +26,4 @@ cliff.toml                    @vpayno
 .proselintrc.json             @vpayno
 .gitlint                      @vpayno
 .commitlint.config.mjs        @vpayno
+.editorconfig                 @vpayno
