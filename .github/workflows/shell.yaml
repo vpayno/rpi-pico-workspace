@@ -1,0 +1,39 @@
+#
+# .github/workflows/shell.yaml
+#
+
+# https://github.com/reviewdog/action-shellcheck
+---
+
+name: shell
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: shellcheck
+        uses: reviewdog/action-shellcheck@v1
+        with:
+          github_token: ${{ github.token }}
+          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+          reporter: github-pr-check
+          path: "."
+          exclude: "./.git/*"
+          check_all_files_with_shebangs: "true"
+          # Change reporter level if you need. GitHub Status Check won't become failure with warning.
+          level: error
