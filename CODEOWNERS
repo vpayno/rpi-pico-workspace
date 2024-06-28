@@ -16,3 +16,5 @@ CHANGELOG.md              @vpayno
 .yamlfix.yaml             @vpayno
 .yamllint.yaml            @vpayno
 .markdownlint.yaml        @vpayno
+.wokeignore               @vpayno
+.woke.yaml                @vpayno
