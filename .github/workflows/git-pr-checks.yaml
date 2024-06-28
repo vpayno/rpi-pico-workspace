@@ -1,0 +1,37 @@
+---
+#
+# .github/workflows/git-pr-checks.yaml
+#
+# yamllint disable rule:line-length
+name: git-pr-checks
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  block-fixup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        id: checkout-repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Block Fixup Commit Merge
+        id: block-if-contains-fixups
+        uses: 13rac1/block-fixup-merge-action@v2.0.0
+      - name: Show Git Version
+        id: git-version
+        run: |-
+          git --version
+      - name: Get File Diff
+        id: git-file-diff
+        run: |-
+          git diff --name-only HEAD^..
+      - name: Get Log Diff
+        id: git-log-diff
+        run: |-
+          git log --color=auto --graph --pretty=format:'%Cred%<(8)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an> [%ce] %Creset%C(cyan)[gpg: %G?]%Creset' --abbrev-commit --decorate HEAD^..
