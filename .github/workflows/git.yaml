@@ -1,0 +1,39 @@
+---
+#
+# .github/workflows/git.yaml
+#
+# https://www.conventionalcommits.org/en/v1.0.0/
+# https://github.com/wagoid/commitlint-github-action
+name: git
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  git-commit-message-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        id: checkout-repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for Conventional Commits
+        id: block-if-contains-bad-commit-messages
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlint.config.mjs
+          failOnErrors: true
+          failOnWarnings: false
