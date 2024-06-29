@@ -1,3 +1,16 @@
 # generic gitignore entries
 *~
 *bak
+
+*zip
+*tar
+*tar.xz
+*tar.gz
+*tar.bz2
+*tar.zstd
+
+fw/
+*.uf2
+*.elf
+*.UF2
+*.ELF

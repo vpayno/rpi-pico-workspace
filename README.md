@@ -42,3 +42,76 @@ go install github.com/charmbracelet/gum@latest
 go install github.com/charmbracelet/glow@latest
 go install github.com/mikefarah/yq/v4@latest
 ```
+
+## Updating the Pico
+
+To put the Pico/Pico W in update mode,
+
+- disconnect the usb cable
+- hold the `BOOTSEL` Button
+- connect the usb cable
+- let go of the `BOOTSEL` Button
+
+## Setup spare Pico as a debugger
+
+[Debug with a second Pico (page 69)](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)
+
+To update the board, it needs to be in update mode.
+
+```bash { background=false category=setup-debugger-fw closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=pico-install-debugprobe promptEnv=true terminalRows=25 }
+# install Raspberry Pi Pico DebugProbe firmware
+
+set -e
+
+if [[ ! -d /mnt/chromeos/removable/RPI-RP2/ ]]; then
+    printf "ERROR: You need to share the RPI-RP2 volume with Linux\n"
+    exit 1
+fi
+
+if [[ ! -f /mnt/chromeos/removable/RPI-RP2/INFO_UF2.TXT ]]; then
+    printf "ERROR: Board isn't in UF2 update mode\n"
+    exit 1
+fi
+
+# all paths are relative to the / directory
+
+stty cols 80
+stty rows 25
+
+declare TD
+
+gum format "# Please choose the deploy target directory:"
+printf "\n"
+TD="$(gum choose $(find /mnt/chromeos/removable/ -maxdepth 1 -type d | grep -v -E '^/mnt/chromeos/removable/$'))"
+printf "\n"
+
+printf "Device contents (before):\n"
+tree "${TD}"
+printf "\n"
+
+declare uf2_url="$(curl -sS https://api.github.com/repos/raspberrypi/debugprobe/releases/latest | jq -r '.assets[].browser_download_url | match(".*/debugprobe_on_pico.uf2").string')"
+
+printf "Running: %s\n" "wget -c ${uf2_url}"
+[[ -d fw ]] || mkdir fw
+cd fw
+time wget -c "${uf2_url}"
+cd ..
+printf "done.\n"
+printf "\n"
+
+printf "Running: %s\n" "cp -v ./fw/${uf2_url##*/} ${TD}/"
+cp -v "./fw/${uf2_url##*/}" "${TD}/"
+printf "done.\n"
+printf "\n"
+
+printf "After the Pico reboots, share it with linux.\n"
+printf "Waiting for [%s] to show up...\n" "Raspberry Pi Debugprobe on Pico (CMSIS-DAP)"
+while ! lsusb | grep -q 'Raspberry Pi Debugprobe on Pico (CMSIS-DAP)'; do sleep 1s; done
+printf "\n"
+
+lsusb
+printf "\n"
+
+dmesg -T | grep -e usb -e cdc_acm | tail -n 5
+printf "\n"
+```

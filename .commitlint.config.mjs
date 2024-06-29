@@ -39,7 +39,7 @@ export default {
         'build',
         'chore',
         'ci',
-        'coral',
+        'debug',
         'docs',
         'feat',
         'fix',
