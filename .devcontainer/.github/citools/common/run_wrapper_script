@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# .github/citools/common/run_wrapper_script
+#
+
+# shellcheck disable=SC1091
+source .github/citools/includes/wrapper-library || exit
+
+if [[ $# -lt 2 ]]; then
+	printf "Usage: %s %s\n" "${0}" "work_dir command args"
+	exit 1
+fi
+
+declare collector_cmd="cat"
+
+if [[ -n ${GITHUB_STEP_SUMMARY} ]]; then
+	collector_cmd="tee -a ${GITHUB_STEP_SUMMARY}"
+fi
+
+declare -i retval=0
+
+declare work_dir="${1}"
+shift
+
+printf "\n"
+printf "Starting directory: "
+pwd
+cd "${work_dir}" || exit 1
+printf " Working directory: "
+pwd
+printf "\n"
+
+printf "Working directory contents:\n"
+printf "\n"
+# shellcheck disable=SC2012
+ls -alh | column -t
+printf "\n"
+
+collect_fn() {
+	md_code_tag text
+	echo Running: "${@}"
+	printf "\n"
+	"${@}" 2>&1 || ((retval++))
+	md_code_tag
+	printf "\n"
+
+	return "${retval}"
+}
+
+collect_fn "${@}" | ${collector_cmd} || ((retval++))
+
+echo exit "${retval}"
+exit "${retval}"

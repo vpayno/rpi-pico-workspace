@@ -1,0 +1,237 @@
+#!/bin/bash
+#
+# .github/citools/python/python-setup-install
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+main() {
+	printf "Python Installation\n\n"
+
+	print_ruler
+
+	echo Running: sudo apt update
+	time sudo apt update || track_errors
+
+	print_ruler
+
+	local -a debs
+	debs=(
+		autoconf
+		automake
+		bc
+		bison
+		build-essential
+		curl
+		g++
+		gcc
+		git
+		gnupg
+		libbz2-dev
+		libc6-dev
+		libffi-dev
+		libgdbm-dev
+		libgmp-dev
+		liblzma-dev
+		libncurses5-dev
+		libreadline-dev
+		libsqlite3-dev
+		libssl-dev
+		libtool
+		libyaml-dev
+		make
+		pkg-config
+		sqlite3
+		zlib1g-dev
+	)
+
+	echo Running: sudo apt update
+	time sudo apt update || track_errors
+
+	print_ruler
+
+	echo Running: sudo apt install -y "${debs[@]}"
+	time sudo apt install -y "${debs[@]}" || track_errors
+
+	print_ruler
+
+	echo Running: sudo apt-mark manual "${debs[@]}"
+	time sudo apt-mark manual "${debs[@]}" || track_errors
+
+	print_ruler
+
+	echo Running: export PYTHON_CONFIGURE_OPTS="--enable-shared"
+	export PYTHON_CONFIGURE_OPTS="--enable-shared"
+
+	print_ruler
+
+	export PYENV_ROOT="/usr/local/pyenv"
+
+	echo Running: git clone --depth=1 https://github.com/pyenv/pyenv.git "${PYENV_ROOT}"
+	git clone --depth=1 https://github.com/pyenv/pyenv.git "${PYENV_ROOT}" || track_errors
+
+	print_ruler
+
+	echo Running: git clone https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}"/plugins/pyenv-virtualenv
+	git clone https://github.com/pyenv/pyenv-virtualenv.git "${PYENV_ROOT}"/plugins/pyenv-virtualenv || track_errors
+
+	print_ruler
+
+	{ cd "${PYENV_ROOT}" && time src/configure && time make -C src; } || track_errors
+
+	print_ruler
+
+	printf "Configuring Shell: "
+	tee /etc/profile.d/python.sh <<-EOF
+		#
+		# /etc/profile.d/python.sh
+		#
+
+		export PYENV_ROOT="/usr/local/pyenv"
+
+		if ! echo \${PATH} | grep -q \${PYENV_ROOT}/bin; then
+			export PATH="\${PYENV_ROOT}/bin:\${PATH}"
+		fi
+
+		if command -v pyenv 1>/dev/null 2>&1; then
+			if ! echo \${PATH} | grep -q \${PYENV_ROOT}/shims; then
+				eval "\$(pyenv init --path)"
+			fi
+
+			if [ -z \${PYENV_SHELL} ]; then
+				eval "\$(pyenv init -)"
+			fi
+
+			if ! echo \${PATH} | grep -q \${PYENV_ROOT}/plugins/pyenv-virtualenv/shims; then
+				eval "\$(pyenv virtualenv-init -)"
+			fi
+		fi
+	EOF
+	printf "done\n"
+
+	# shellcheck disable=SC1090
+	echo Running: source /etc/profile.d/python.sh
+	source /etc/profile.d/python.sh || track_errors
+	printf "done\n"
+
+	print_ruler
+
+	echo Running: pyenv -v
+	time pyenv -v || track_errors
+
+	print_ruler
+
+	echo Running: pyenv install --list
+	time pyenv install --list || track_errors
+
+	print_ruler
+
+	local python_version
+	python_version="$(pyenv install --list | grep -E "^\s+3" | grep -v -- -dev | grep -v "[a-z]" | tr -d ' ' | tail -n 1)" || track_errors
+
+	echo Running: pyenv install "${python_version}"
+	time pyenv install "${python_version}" || track_errors
+
+	print_ruler
+
+	echo Running: pyenv global "${python_version}"
+	time pyenv global "${python_version}" || track_errors
+
+	print_ruler
+
+	echo Running: python --version
+	time python --version || track_errors
+
+	print_ruler
+
+	local -a pip_packages
+	pip_packages=(
+		ansible-lint
+		bandit[toml]
+		black
+		coverage
+		dagger-io
+		db-sqlite3
+		flake8
+		flawfinder
+		flynt
+		ipykernel
+		ipython
+		isort
+		itsdangerous
+		jsonlint
+		jsonschema
+		mccabe
+		mypy
+		mypy-extensions
+		pep8
+		pep8-naming
+		pexpect
+		proselint
+		prospector
+		pycobertura
+		pycodestyle
+		pydantic
+		pydocstyle
+		pyflakes
+		pylint
+		pylint-flask
+		pyright
+		pysqlite3
+		pytest
+		pytest-cov
+		pytest-docker
+		pytest-randomly
+		python-dateutil
+		python-lsp-black
+		python-lsp-jsonrpc
+		python-lsp-ruff
+		python-lsp-server
+		python-utils
+		pytype
+		refurb
+		rich-cli
+		ruff
+		safety
+		textual[dev]
+		textualize_see
+		tmuxp
+		toml
+		tomli
+		tomlkit
+		typeguard
+		types-Pygments
+		types-colorama
+		types-docutils
+		types-mock
+		types-setuptools
+		typing_extensions
+		xmlformatter
+		yamlfix
+		yamllint
+		yapf
+	)
+
+	echo Running: pip install --upgrade pip
+	time pip install --upgrade pip  || track_errors
+
+	print_ruler
+
+	echo Running: pip install pdm
+	time pip install pdm  || track_errors
+
+	print_ruler
+
+	echo Running: pip install "${pip_packages[@]}"
+	time pip install "${pip_packages[@]}" || track_errors
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"

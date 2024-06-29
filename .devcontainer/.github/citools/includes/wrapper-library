@@ -1,0 +1,291 @@
+#!/bin/bash
+#
+# .github/citools/includes/wrapper-library
+#
+
+set -o pipefail
+
+# shared variables
+
+declare -xr LLVM_VER=18
+
+if [[ -f /etc/os-release ]]; then
+	. /etc/os-release
+fi
+
+declare DISTRO_ID="${ID}" # debian
+if [[ -z ${ID} ]]; then
+	# shellcheck disable=SC2034
+	DISTRO_ID="distro_id_not_set"
+fi
+
+if [[ -z ${VERSION_CODENAME} ]]; then
+	VERSION_CODENAME="distro_release_not_set" # bookworm
+fi
+
+# helper functions
+
+md_code_tag() {
+	if [[ -n ${GITHUB_STEP_SUMMARY} ]]; then
+		printf "\`\`\`%s\n" "${1}"
+
+		if [[ -z ${1} ]]; then
+			printf "\n"
+		fi
+	fi
+} # md_code_tag()
+
+run_command() {
+	# md_code_tag text
+	echo Running: "${@}"
+	printf "\n"
+	# shellcheck disable=SC2154
+	time "${@}" || ((retval--))
+	printf "\n"
+	# md_code_tag
+} # run_command()
+
+track_errors() {
+	((retval++))
+	printf "\nERROR: Failure detected in last command.\n"
+} # track_errors()
+
+print_ruler() {
+	printf "\n "
+	printf "=%.0s" {1..78}
+	printf "\n"
+	printf "\n"
+} # print_ruler()
+
+get_rust_package_name() {
+	toml get Cargo.toml package | jq -r .name
+} # get_rust_package_name()
+
+show_tool_versions_rust_short() {
+	# md_code_tag text
+	printf "Rust versions:\n"
+	printf "\n"
+	rustc --version | paste /dev/null -
+	rustup --version | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_rust_short()
+
+show_tool_versions_rust() {
+	show_tool_versions_rust_short
+
+	if [[ -z ${GITHUB_ACTIONS} ]]; then
+		return
+	fi
+
+	# md_code_tag text
+	printf "Installed cargo crates:\n"
+	printf "\n"
+	cargo install --list | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+
+	# md_code_tag text
+	rustup --version
+	# md_code_tag
+	printf "\n"
+
+	# md_code_tag text
+	printf "Installed rustup components:\n"
+	printf "\n"
+	rustup component list | grep '(installed)' | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+
+	# md_code_tag text
+	printf "Environment variables:\n"
+	printf "\n"
+	printf "%s=%s\n" "PATH" "${PATH}"
+	printf "\n"
+	printf "%s=%s\n" "CARGO_REGISTRIES_CRATES_IO_PROTOCOL" "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL}" "RUSTC_WRAPPER" "${RUSTC_WRAPPER}"
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_rust()
+
+show_tool_versions_go_short() {
+	# md_code_tag text
+	printf "Go version:\n"
+	printf "\n"
+	go version | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_go_short()
+
+show_tool_versions_go() {
+	show_tool_versions_go_short
+
+	if [[ -z ${GITHUB_ACTIONS} ]]; then
+		return
+	fi
+
+	# md_code_tag text
+	printf "Installed Go packages:\n"
+	printf "\n"
+	# shellcheck disable=SC2012
+	ls "${HOME}"/go/bin | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+
+	# md_code_tag text
+	printf "Environment variables:\n"
+	printf "\n"
+	printf "%s=%s\n" "PATH" "${PATH}"
+	printf "\n"
+	printf "%s=%s\n" "GOBIN" "${GOBIN}" "GOPATH" "${GOPATH}"
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_go()
+
+show_tool_versions_ruby_short() {
+	# md_code_tag text
+	printf "Ruby versions:\n"
+	printf "\n"
+	ruby --version | paste /dev/null -
+	rbenv --version | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_ruby_short()
+
+show_tool_versions_ruby() {
+	show_tool_versions_ruby_short
+
+	if [[ -z ${GITHUB_ACTIONS} ]]; then
+		return
+	fi
+
+	# md_code_tag text
+	printf "Installed Gem packages:\n"
+	printf "\n"
+	gem list | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_ruby()
+
+show_tool_versions_node_short() {
+	# md_code_tag text
+	printf "Node versions:\n"
+	printf "\n"
+	{
+		printf "nodejs: "
+		nodejs --version
+	} | paste /dev/null -
+	{
+		printf "   npm: "
+		npm --version
+	} | paste /dev/null -
+	{
+		printf "  yarn: "
+		yarn --version
+	} | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_node_short()
+
+show_tool_versions_node() {
+	show_tool_versions_node_short
+
+	if [[ -z ${GITHUB_ACTIONS} ]]; then
+		return
+	fi
+
+	# md_code_tag text
+	printf "Installed npm packages:\n"
+	printf "\n"
+	npm list --global | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+
+	# md_code_tag text
+	printf "Installed yarn packages:\n"
+	printf "\n"
+	yarn global list | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_node()
+
+show_tool_versions_python_short() {
+	# md_code_tag text
+	printf "Python versions:\n"
+	printf "\n"
+	python --version | paste /dev/null -
+	pip --version | paste /dev/null -
+	pdm --version | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_python_short()
+
+show_tool_versions_python() {
+	show_tool_versions_python_short
+
+	if [[ -z ${GITHUB_ACTIONS} ]]; then
+		return
+	fi
+
+	# md_code_tag text
+	printf "Installed Python packages:\n"
+	printf "\n"
+	pip list | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_python()
+
+show_tool_versions_gleam_short() {
+	# md_code_tag text
+	printf "Gleam versions:\n"
+	printf "\n"
+	gleam --version | paste /dev/null -
+	printf "\n" | erl | paste /dev/null -
+	rebar3 --version | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_gleam_short()
+
+show_tool_versions_gleam() {
+	show_tool_versions_gleam_short
+
+	if [[ -z ${GITHUB_ACTIONS} ]]; then
+		return
+	fi
+
+	# md_code_tag text
+	printf "Installed Gleam packages:\n"
+	printf "\n"
+	printf "null\n"
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_gleam()
+
+show_tool_versions_r_short() {
+	# md_code_tag text
+	printf "R versions:\n"
+	printf "\n"
+	R --version | paste /dev/null -
+	printf "\n"
+	Rscript --version | paste /dev/null -
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_r_short()
+
+show_tool_versions_r() {
+	show_tool_versions_r_short
+
+	if [[ -z ${GITHUB_ACTIONS} ]]; then
+		return
+	fi
+
+	# md_code_tag text
+	printf "Installed R packages:\n"
+	printf "\n"
+	printf "null\n"
+	R --no-save <<-EOF
+		p <- available.packages()
+		p
+	EOF
+	# md_code_tag
+	printf "\n"
+} # show_tool_versions_r()

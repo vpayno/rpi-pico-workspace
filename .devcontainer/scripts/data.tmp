@@ -1,0 +1,4 @@
+devcontainer_username="vpayno"
+devcontainer_password="ascomycetous"
+devcontainer_uid="1000"
+devcontainer_gid="1000"

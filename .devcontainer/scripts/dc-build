@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+declare image_name
+declare image_ver
+
+image_name="$(jq -r .image .devcontainer/devcontainer.json | cut -f1 -d: | cut -f2 -d/)"
+image_ver="$(date --utc '+%Y%m%d')"
+
+# build the dev container
+time devcontainer build --workspace-folder "${PWD}" --image-name "${image_name}:${image_ver}" "${@}"
+printf "\n"

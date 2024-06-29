@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# .github/citools/go/go-setup-verify
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+declare -A go_cmds
+
+go_cmds=(
+	[go]=$(
+		command -v go >&/dev/null
+		echo "$?"
+	)
+)
+
+main() {
+	for key in "${!go_cmds[@]}"; do
+		if [[ ${go_cmds[${key}]} -ne 0 ]]; then
+			printf "ERROR: command [%s] not found.\n" "${key}"
+			((retval++))
+		fi
+	done
+
+	if [[ ${retval} -ne 0 ]]; then
+		return "${retval}"
+	fi
+
+	printf "Verifying Go Installation\n\n"
+
+	print_ruler
+
+	show_tool_versions_go
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"

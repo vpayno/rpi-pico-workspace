@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+declare image_name
+declare image_full
+declare devcontainer_id
+
+image_name="$(jq -r .name .devcontainer/devcontainer.json)"
+image_full="$(jq -r .image .devcontainer/devcontainer.json)"
+devcontainer_id="$(docker ps --all --format 'json' | jq -r --arg name "${image_name}" --arg image "${image_full}" '. | select(.Names | contains($name)) | select(.Image == $image) | .ID')"
+
+./.devcontainer/scripts/dc-list
+printf "\n"
+
+# delete old container
+if [[ -n ${devcontainer_id} ]]; then
+	printf "Removing old container...\n"
+	echo Running: docker rm -f "${devcontainer_id}"
+	docker rm -f "${devcontainer_id}"
+	printf "done.\n"
+fi
+printf "\n"

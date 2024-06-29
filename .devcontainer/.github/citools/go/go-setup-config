@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# .github/citools/go/go-setup-config
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+main() {
+	printf "Setup Go Environment\n\n"
+
+	print_ruler
+
+	../../.github/citools/common/gh-setup-env || track_errors
+
+	print_ruler
+
+	tree /usr/local/go/bin
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"
