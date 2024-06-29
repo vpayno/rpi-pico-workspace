@@ -14,3 +14,7 @@ fw/
 *.elf
 *.UF2
 *.ELF
+
+# hw info files that may leak data
+INDEX.HTM
+INFO_UF2.TXT
