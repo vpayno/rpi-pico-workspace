@@ -115,3 +115,56 @@ printf "\n"
 dmesg -T | grep -e usb -e cdc_acm | tail -n 5
 printf "\n"
 ```
+
+## Factory reset the Pico/Pico W
+
+Use this to reset the storage on the Pico/Pico W.
+
+To update the board, it needs to be in update mode.
+
+```bash { background=false category=setup-reset-fw closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=pico-install-reset-storage promptEnv=true terminalRows=25 }
+# reset the storage on the Raspberry Pi Pico
+
+set -e
+
+if [[ ! -d /mnt/chromeos/removable/RPI-RP2/ ]]; then
+    printf "ERROR: You need to share the RPI-RP2 volume with Linux\n"
+    exit 1
+fi
+
+if [[ ! -f /mnt/chromeos/removable/RPI-RP2/INFO_UF2.TXT ]]; then
+    printf "ERROR: Board isn't in UF2 update mode\n"
+    exit 1
+fi
+
+# all paths are relative to the / directory
+
+stty cols 80
+stty rows 25
+
+declare TD
+
+gum format "# Please choose the deploy target directory:"
+printf "\n"
+TD="$(gum choose $(find /mnt/chromeos/removable/ -maxdepth 1 -type d | grep -v -E '^/mnt/chromeos/removable/$'))"
+printf "\n"
+
+printf "Device contents (before):\n"
+tree "${TD}"
+printf "\n"
+
+declare uf2_url="https://datasheets.raspberrypi.com/soft/flash_nuke.uf2"
+
+printf "Running: %s\n" "wget -c ${uf2_url}"
+[[ -d fw ]] || mkdir fw
+cd fw
+time wget -c "${uf2_url}"
+cd ..
+printf "done.\n"
+printf "\n"
+
+printf "Running: %s\n" "cp -v ./fw/${uf2_url##*/} ${TD}/"
+cp -v "./fw/${uf2_url##*/}" "${TD}/"
+printf "done.\n"
+printf "\n"
+```
