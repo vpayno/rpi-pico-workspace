@@ -11,6 +11,18 @@
 
 Personal Raspberry Pi Pico/Pico W workspace for learning Arduino, MicroPython, TinyGo, and Rust.
 
+## Raspberry Pi Pico / Pico W Links
+
+- [Raspberry Pi Pico W and Pico WH Documentation](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html)
+- [Pinout Diagram](https://datasheets.raspberrypi.com/pico/Pico-R3-A4-Pinout.pdf)
+- [Arduino](https://arduino-pico.readthedocs.io/en/latest/)
+- [C/C++](https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html)
+- [CircuitPython for Pico W](https://circuitpython.org/board/raspberry_pi_pico_w/)
+- [CircuitPython for Pico](https://circuitpython.org/board/raspberry_pi_pico/)
+- [MicroPython](https://projects.raspberrypi.org/en/projects/getting-started-with-the-pico)
+- [Rust](https://crates.io/crates/rp-pico)
+- [TinyGo](https://tinygo.org/docs/reference/microcontrollers/pico/)
+
 ## RunMe Playbook
 
 This and other readme files in this repo are RunMe Playbooks.
