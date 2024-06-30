@@ -187,3 +187,67 @@ cp -v "./fw/${uf2_url##*/}" "${TD}/"
 printf "done.\n"
 printf "\n"
 ```
+
+## Watch serial console
+
+```bash { background=false category=tools closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=serial-watch promptEnv=true terminalRows=25 }
+# watch the serial console
+
+set -e
+
+# all paths are relative to the / directory
+
+stty cols 80
+stty rows 25
+
+declare SD
+
+gum format "# Please choose the deploy target directory:"
+printf "\n"
+SD="$(gum choose $(find /dev -name 'ttyACM*' -not -path '/dev/.lxc/*' 2>/dev/null | sort -V))"
+printf "\n"
+
+printf "Waiting for %s:\n" "${SD}"
+while [[ ! -e ${SD} ]]; do
+    printf "."
+    sleep 1s
+done
+printf "\n"
+printf "\n"
+
+printf "Press Ctrl-C to cancel the serial watch:\n"
+printf "\n"
+cat "${SD}" || true
+printf "\n"
+```
+
+Catch the next 10 lines from the serial console.
+
+```bash { background=false category=tools closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=serial-get promptEnv=true terminalRows=25 }
+# watch the serial console
+
+set -e
+
+# all paths are relative to the / directory
+
+stty cols 80
+stty rows 25
+
+declare SD
+
+gum format "# Please choose the deploy target directory:"
+printf "\n"
+SD="$(gum choose $(find /dev -name 'ttyACM*' -not -path '/dev/.lxc/*' 2>/dev/null | sort -V))"
+printf "\n"
+
+printf "Waiting for %s:\n" "${SD}"
+while [[ ! -e ${SD} ]]; do
+    printf "."
+    sleep 1s
+done
+printf "\n"
+printf "\n"
+
+cat "${SD}" | head -n 10 || true
+printf "\n"
+```
