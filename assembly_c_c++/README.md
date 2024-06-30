@@ -35,7 +35,7 @@ To put the Pico/Pico W in update mode,
 
 ## Pico SDK CLI commands
 
-Compile and export the the bin, elf and uf2 files to `./build/rp2040.rp2040.adafruit_kb2040/`.
+Compile and export the the bin, elf and uf2 files to `./build/`.
 
 ```bash { background=false category=build-picosdk closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=picosdk-cli-compile promptEnv=true terminalRows=25 }
 # choose a pico sdk project and build it
