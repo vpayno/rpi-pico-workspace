@@ -44,6 +44,7 @@ export default {
         'docs',
         'feat',
         'fix',
+        'micropython',
         'perf',
         'picosdk',
         'refactor',
@@ -159,6 +160,11 @@ export default {
             description: 'Pico SDK project commit',
             title: 'PicoSDK',
             emoji: '🍓',
+          },
+          micropython: {
+            description: 'MicroPython project commit',
+            title: 'MicroPython',
+            emoji: '🐍',
           },
         },
         scope: {

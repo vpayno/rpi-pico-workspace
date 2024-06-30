@@ -36,3 +36,10 @@ CTestTestfile.cmake
 _deps
 build/
 .ccls-cache/
+
+# Python/MicroPython/CircuitPython
+.python-version
+.pdm-python
+.venv
+.mypy_cache
+boot_out.txt

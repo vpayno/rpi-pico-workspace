@@ -75,6 +75,7 @@ commit_parsers = [
   { message = "^devcontainer", group = "<!-- 12 -->🧰 Dev Container" },
   { message = "^debug", group = "<!-- 13 -->🐛 Debug" },
   { message = "^picosdk", group = "<!-- 14 -->🍓 Pico SDK" },
+  { message = "^micropython", group = "<!-- 15 -->🐍 MicroPython" },
 ]
 # protect breaking changes from being skipped due to matching a skipping commit_parser
 protect_breaking_commits = false
