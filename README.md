@@ -1,6 +1,7 @@
 # rpi-pico-workspace
 
 [![actionlint](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/gh-actions.yaml/badge.svg?branch=main)](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/gh-actions.yaml)
+[![devcontainer](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/devcontainer.yaml/badge.svg?branch=main)](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/devcontainer.yaml)
 [![git](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/git.yaml/badge.svg?branch=main)](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/git.yaml)
 [![json](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/json.yaml/badge.svg?branch=main)](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/json.yaml)
 [![markdown](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/markdown.yaml/badge.svg?branch=main)](https://github.com/vpayno/rpi-pico-workspace/actions/workflows/markdown.yaml)
@@ -42,6 +43,20 @@ go install github.com/charmbracelet/gum@latest
 go install github.com/charmbracelet/glow@latest
 go install github.com/mikefarah/yq/v4@latest
 ```
+
+## Dev Container
+
+This project has a dev container to make it easier to manage the Pico development environment.
+It just needs [Docker](https://docs.docker.com/engine/install/)
+and the [Dev Container CLI](https://github.com/devcontainers/cli) installed to get setup.
+
+To install the Dev Containers CLI:
+
+```bash { background=false category=devcontainer closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=devcontainer-install promptEnv=true terminalRows=10 }
+npm install -g @devcontainers/cli
+```
+
+The rest of the Dev Container notes are located in [DEVCONTAINER.md](./DEVCONTAINER.md).
 
 ## Updating the Pico
 

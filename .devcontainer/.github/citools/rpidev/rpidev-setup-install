@@ -1,0 +1,140 @@
+#!/bin/bash
+#
+# .github/citools/rpidev/rpidev-setup-install
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+main() {
+	printf "Raspberry Pi Development Environment Installation\n\n"
+
+	print_ruler
+
+	local -a deb_pkgs
+	local rpidev_pkg
+
+	deb_pkgs=(
+		cmake
+		gcc-arm-none-eabi
+		libnewlib-arm-none-eabi
+		libstdc++-arm-none-eabi-newlib
+	)
+
+	print_ruler
+
+	echo Running: sudo apt update
+	time sudo apt update || track_errors
+
+	print_ruler
+
+	for rpidev_pkg in "${deb_pkgs[@]}"; do
+		echo Running: sudo apt install -y "${rpidev_pkg}"
+		time sudo apt install -y "${rpidev_pkg}" # || track_errors
+		printf "\n"
+
+		echo Running: sudo apt-mark manual "${rpidev_pkg}"
+		time sudo apt-mark manual "${rpidev_pkg}" # || track_errors
+		printf "\n"
+	done
+
+	print_ruler
+
+	printf "Configuring Shell: "
+	tee /etc/profile.d/rpidev.sh <<-EOF
+		#
+		# /etc/profile.d/rpidev.sh
+		#
+
+	EOF
+	printf "done\n"
+
+	# shellcheck disable=SC1090
+	echo Running: source /etc/profile.d/python.sh
+	source /etc/profile.d/python.sh || track_errors
+	printf "done\n"
+
+	# shellcheck disable=SC1090
+	echo Running: source /etc/profile.d/rpidev.sh
+	source /etc/profile.d/rpidev.sh || track_errors
+	printf "done\n"
+
+	print_ruler
+
+	echo Running: python --version
+	time python --version || track_errors
+
+	print_ruler
+
+	declare -a cargo_pkgs=(
+	)
+	declare cargo_pkg
+
+	declare -a go_pkgs=(
+		github.com/charmbracelet/glow@latest
+		github.com/charmbracelet/gum@latest
+		github.com/mikefarah/yq/v4@latest
+		github.com/stateful/runme/v3@v3
+	)
+	declare go_pkg
+
+	declare -a pip_pkgs=(
+	)
+	declare pip_pkg
+
+	declare -a npm_pkgs=(
+	)
+	declare npm_pkg
+
+	declare -a apt_pkgs=(
+	)
+
+	print_ruler
+
+	echo Running: apt update
+	time apt update
+
+	print_ruler
+
+	if [[ ${#apt_pkgs[@]} -gt 0 ]]; then
+		echo Running: apt install -y "${apt_pkgs[@]}"
+		# libedgetpu1-max has a yes/no prompt
+		time apt install -y "${apt_pkgs[@]}"
+	fi
+
+	print_ruler
+
+	time for cargo_pkg in "${cargo_pkgs[@]}"; do
+		time cargo install --locked "${cargo_pkg}"
+		printf "\n"
+	done
+
+	print_ruler
+
+	time for go_pkg in "${go_pkgs[@]}"; do
+		time go install "${go_pkg}"
+		printf "\n"
+	done
+
+	print_ruler
+
+	time for pip_pkg in "${pip_pkgs[@]}"; do
+		time pip install "${pip_pkg}"
+		printf "\n"
+	done
+
+	print_ruler
+
+	time for npm_pkg in "${npm_pkgs[@]}"; do
+		npm install -g "${npm_pkg}"
+	done
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"

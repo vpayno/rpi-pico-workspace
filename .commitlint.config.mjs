@@ -40,6 +40,7 @@ export default {
         'chore',
         'ci',
         'debug',
+        'devcontainer',
         'docs',
         'feat',
         'fix',

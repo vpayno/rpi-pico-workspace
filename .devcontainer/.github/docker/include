@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# .github/docker/include
+#
+# Usage: source from layer script and call the functions
+#
+# Notes:
+# - use sh/posix syntax only
+
+export IMAGE_NAME="${1:-}"
+
+layer_begin() {
+	printf "=== %s:%s start ===\n\n" "${0}" "layer_begin()"
+
+	printf "%s: %s\n" "$1" "$(date +%Y%m%d-%H%M%S)" >/etc/ci-image-info
+	cat /etc/ci-image-info
+	printf "\n"
+
+	echo Running: . /etc/profile
+	. /etc/profile || exit
+	printf "\n"
+
+	echo Running: apt update
+	apt update || exit
+	printf "\n"
+
+	echo Running: apt list --upgradable
+	apt list --upgradable || exit
+	printf "\n"
+
+	echo Running: apt upgrade -y
+	apt upgrade -y || exit
+	printf "\n"
+
+	printf "=== %s:%s end ===\n\n" "${0}" "layer_begin()"
+}
+
+layer_end() {
+	printf "=== %s:%s start ===\n\n" "${0}" "layer_end()"
+
+	echo Running: apt autoremove -y
+	apt autoremove -y || exit
+	printf "\n"
+
+	echo Running: apt autoclean -y
+	apt autoclean -y || exit
+	printf "\n"
+
+	echo Running: apt-get clean -y
+	apt-get clean -y || exit
+	printf "\n"
+
+	echo Running: du -shc /var/lib/apt/lists/
+	du -shc /var/lib/apt/lists/ || exit
+	printf "\n"
+
+	echo Running: rm -rf /var/lib/apt/lists/*
+	rm -rf /var/lib/apt/lists/* || exit
+	printf "\n"
+
+	echo Running: df -h
+	df -h
+	printf "\n"
+
+	echo Running: du -shc /* \| grep '[0-9][MGT]'
+	du -shc /* | grep '[0-9][MGT]'
+	printf "\n"
+
+	printf "=== %s:%s end ===\n\n" "${0}" "layer_end()"
+}

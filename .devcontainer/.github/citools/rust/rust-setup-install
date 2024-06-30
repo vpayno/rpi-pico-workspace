@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# .github/citools/rust/rust-setup-install
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+main() {
+	printf "Rust Installation\n\n"
+
+	print_ruler
+
+	echo Running: rustup default stable
+	time rustup default stable || ((retval++))
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"

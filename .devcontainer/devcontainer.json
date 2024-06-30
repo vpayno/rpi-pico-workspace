@@ -1,0 +1,35 @@
+{
+	"name": "rpi-pico-workspace",
+	"image": "vpayno/ci-devcontainer-rpidev:latest",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"target": "vpayno/ci-devcontainer-rpidev:latest"
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": []
+		}
+	},
+	"settings": {
+		"terminal.integrated.shell.linux": "/usr/bin/env bash"
+	},
+	"features": {},
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"portsAttributes": {},
+	"otherPortsAttributes": {},
+	"containerEnv": {},
+	"remoteEnv": {},
+	"privileged": false,
+	"initializeCommand": "docker pull vpayno/ci-devcontainer-rpidev:latest || true",
+	"postCreateCommand": "cd /workspaces/rpi-pico-workspace/; tree .devcontainer/; ./.devcontainer/scripts/dc-up-post-create-command.sh user:${localEnv:USER}",
+	"remoteUser": "root",
+	"runArgs": [
+		"--name",
+		"${localEnv:USER}_rpi-pico-workspace",
+		"--add-host=host.docker.internal:host-gateway"
+	],
+	"shutdownAction": "none"
+}

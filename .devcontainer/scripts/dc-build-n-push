@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+declare image_org
+declare image_name
+declare image_date
+declare container_id
+
+image_org="$(jq -r .image .devcontainer/devcontainer.json | cut -f1 -d/)"
+image_name="$(jq -r .image .devcontainer/devcontainer.json | cut -f2 -d/ | cut -f1 -d:)"
+image_date="$(date '+%Y%m%d')"
+
+# build the dev container
+time devcontainer build --buildkit auto --workspace-folder "${PWD}" --image-name "${image_name}:${image_date}" "${@}"
+printf "\n"
+
+container_id="$(docker image ls --format json | jq -r --arg repo "${image_name}" --arg tag "${image_date}" '. | select(.Repository == $repo) | select(.Tag == $tag) | .ID')"
+
+# add tags for the new image
+docker image tag "${container_id}" "${image_org}/${image_name}:latest"
+docker image tag "${container_id}" "${image_org}/${image_name}:${image_date}"
+docker image ls
+printf "\n"
+
+docker push --all-tags "${image_org}/${image_name}"
+printf "\n"

@@ -1,0 +1,215 @@
+#!/bin/bash
+#
+# .github/citools/common/gh-setup-env
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+main() {
+	printf "Setup GitHub Environment\n\n"
+
+	if [[ -z ${GITHUB_PATH} || -z ${GITHUB_ENV} ]]; then
+		printf "Skipping since we aren't running directly in a GH CI Workflow.\n"
+		return
+	fi
+
+	print_ruler
+
+	if [[ -f /etc/profile.d/go.sh ]]; then
+		source /etc/profile.d/go.sh || track_errors
+
+		printf "Adding Go paths to GITHUB_PATH...\n"
+		printf "%s\n" "${GOPATH}/bin" | tee -a "${GITHUB_PATH}" || track_errors
+		printf "\n"
+
+		printf "Adding Go paths to GITHUB_ENV...\n"
+		printf "%s=%s\n" "GOROOT" "${GOROOT}" | tee -a "${GITHUB_ENV}" || track_errors
+		printf "%s=%s\n" "GOPATH" "${GOPATH}" | tee -a "${GITHUB_ENV}" || track_errors
+		printf "%s=%s\n" "GOBIN" "${GOPATH}/bin" | tee -a "${GITHUB_ENV}" || track_errors
+		printf "%s=%s\n" "GOSRC" "${GOPATH}/src" | tee -a "${GITHUB_ENV}" || track_errors
+		printf "\n"
+
+		if [ "${HOSTTYPE}" = x86_64 ]; then
+			printf "%s=%s\n" "GOARCH" "amd64" | tee -a "${GITHUB_ENV}" || track_errors
+		elif [ "${HOSTTYPE}" = i686 ]; then
+			printf "%s=%s\n" "GOARCH" "i386" | tee -a "${GITHUB_ENV}" || track_errors
+		elif [ "${HOSTTYPE}" = aarch64 ]; then
+			printf "%s=%s\n" "GOARCH" "arm64" | tee -a "${GITHUB_ENV}" || track_errors
+		fi
+		printf "\n"
+
+		printf "Setup Go symlinks for github user:\n"
+		cd "${HOME}" || track_errors
+		if [[ ! -d go ]]; then
+			ln -sv "${GOPATH}" go || track_errors
+		fi
+		if [[ ! -d sdk ]]; then
+			ln -sv "${GO_PREFIX}/go-sdk" sdk || track_errors
+		fi
+		ls -l ~/go ~/sdk
+		cd - || track_errors
+		printf "\n"
+
+		echo Adding source /etc/profile.d/go.sh to ~/.bashrc
+		echo '. /etc/profile.d/go.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		print_ruler
+	fi
+
+	if [[ -f /etc/profile.d/rust.sh ]]; then
+		source /etc/profile.d/rust.sh || track_errors
+
+		printf "Adding Rust paths to GITHUB_PATH...\n"
+		printf "%s\n" "${RUSTBIN}" | tee -a "${GITHUB_PATH}" || track_errors
+		printf "\n"
+
+		printf "Adding Go paths to GITHUB_ENV...\n"
+		if [[ -n ${RUSTC_WRAPPER} ]]; then
+			printf "%s=%s\n" "RUSTC_WRAPPER" "${RUSTC_WRAPPER}" | tee -a "${GITHUB_ENV}" || track_errors
+		fi
+		if [[ -n ${CARGO_REGISTRIES_CRATES_IO_PROTOCOL} ]]; then
+			printf "%s=%s\n" "CARGO_REGISTRIES_CRATES_IO_PROTOCOL" "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL}" | tee -a "${GITHUB_ENV}" || track_errors
+		fi
+		printf "\n"
+
+		echo Adding source /etc/profile.d/rust.sh to ~/.bashrc
+		echo '. /etc/profile.d/rust.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		printf "Setup Rust symlinks for github user:\n"
+		cd "${HOME}" || track_errors
+		if [[ ! -d .cargo ]]; then
+			ln -sv "${CARGO_HOME}" .cargo || track_errors
+		fi
+		if [[ ! -d .rustup ]]; then
+			ln -sv "${RUSTUP_HOME}" .rustup || track_errors
+		fi
+		ls -l ~/.cargo ~/.rustup
+		cd - || track_errors
+		printf "\n"
+
+		print_ruler
+	fi
+
+	if [[ -f /etc/profile.d/ruby.sh ]]; then
+		source /etc/profile.d/ruby.sh || track_errors
+
+		printf "Adding Ruby paths to GITHUB_PATH...\n"
+		printf "%s\n" "/usr/local/rbenv/bin" "/usr/local/rbenv/shims" | tee -a "${GITHUB_PATH}"
+
+		echo Adding source /etc/profile.d/ruby.sh to ~/.bashrc
+		echo '. /etc/profile.d/ruby.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		printf "Setup Ruby symlinks for github user:\n"
+		cd "${HOME}" || track_errors
+		if [[ ! -d .rbenv ]]; then
+			ln -sv "/usr/local/rbenv" .rbenv || track_errors
+		fi
+		ls -l ~/.rbenv
+		cd - || track_errors
+		printf "\n"
+
+		print_ruler
+	fi
+
+	if [[ -f /etc/profile.d/nodejs.sh ]]; then
+		source /etc/profile.d/nodejs.sh || track_errors
+
+		printf "Adding NodeJS paths to GITHUB_PATH...\n"
+		printf "%s\n" "/usr/local/nodenv/bin" "/usr/local/nodenv/shims" | tee -a "${GITHUB_PATH}"
+
+		echo Adding source /etc/profile.d/nodejs.sh to ~/.bashrc
+		echo '. /etc/profile.d/nodejs.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		printf "Setup NodeJS symlinks for github user:\n"
+		cd "${HOME}" || track_errors
+		if [[ ! -d .nodenv ]]; then
+			ln -sv "/usr/local/nodenv" .nodenv || track_errors
+		fi
+		ls -l ~/.nodenv
+		cd - || track_errors
+		printf "\n"
+
+		print_ruler
+	fi
+
+	if [[ -f /etc/profile.d/python.sh ]]; then
+		source /etc/profile.d/python.sh || track_errors
+
+		printf "Adding Python paths to GITHUB_PATH...\n"
+		# printf "%s\n" "/usr/local/pyenv/bin" "/usr/local/pyenv/shims" | tee -a "${GITHUB_PATH}"
+
+		echo Adding source /etc/profile.d/python.sh to ~/.bashrc
+		echo '. /etc/profile.d/python.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		# printf "Setup Python symlinks for github user:\n"
+		# cd "${HOME}" || track_errors
+		# if [[ ! -d .pyenv ]]; then
+		# ln -sv "/usr/local/pyenv" .pyenv || track_errors
+		# fi
+		# ls -l ~/.pyenv
+		# cd - || track_errors
+		# printf "\n"
+
+		print_ruler
+	fi
+
+	if [[ -f /etc/profile.d/gleam.sh ]]; then
+		source /etc/profile.d/gleam.sh || track_errors
+
+		printf "Adding Gleam paths to GITHUB_PATH...\n"
+		printf "%s\n" "/usr/local/erlang/bin" "/usr/local/rebar3/bin" | tee -a "${GITHUB_PATH}"
+
+		echo Adding source /etc/profile.d/gleam.sh to ~/.bashrc
+		echo '. /etc/profile.d/gleam.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		printf "Setup Gleam symlinks for github user:\n"
+		cd "${HOME}" || track_errors
+		if [[ ! -d .cache ]]; then
+			mkdir .cache || track_errors
+			ln -sv "/usr/local/rebar3" .cache/rebar3 || track_errors
+		fi
+		ls -l ~/.cache ~/.cache/rebar3
+		cd - || track_errors
+		printf "\n"
+
+		print_ruler
+	fi
+
+	if [[ -f /etc/profile.d/r.sh ]]; then
+		source /etc/profile.d/r.sh || track_errors
+
+		echo Adding source /etc/profile.d/r.sh to ~/.bashrc
+		echo '. /etc/profile.d/r.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		print_ruler
+	fi
+
+	if [[ -f /etc/profile.d/rpidev.sh ]]; then
+		source /etc/profile.d/rpidev.sh || track_errors
+
+		echo Adding source /etc/profile.d/rpidev.sh to ~/.bashrc
+		echo '. /etc/profile.d/rpidev.sh' | tee -a "${HOME}/.bashrc" || track_errors
+		printf "\n"
+
+		print_ruler
+	fi
+
+	tail -n 1000 -v "${GITHUB_PATH}"
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"

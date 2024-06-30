@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+declare image_name
+declare image_full
+declare repo_name
+
+image_name="$(jq -r .name .devcontainer/devcontainer.json)"
+image_full="$(jq -r .image .devcontainer/devcontainer.json)"
+repo_name="${image_full%%:*}"
+
+printf "Images:\n\n"
+{
+	printf "%s," ID Names Image State Status RunningFor
+	printf "\n"
+	docker image ls --format 'json' | jq -r --arg name "${repo_name}" '. | select(.Repository | contains($name)) | "\(.ID),\(.Repository),\(.Tag),\(.Size),\(.CreatedAt),\(.CreatedSince)"'
+	printf "\n"
+} | column -t --separator ","
+printf "\n"
+printf "\n"
+
+printf "Containers:\n\n"
+{
+	printf "%s," ID Names Image State Status RunningFor
+	printf "\n"
+	docker ps --all --format 'json' | jq -r --arg name "${image_name}" --arg image "${image_full}" '. | select(.Names | contains($name)) | select(.Image == $image) | "\(.ID),\(.Names),\(.Image),\(.State),\(.Status),\(.RunningFor)"'
+	printf "\n"
+} | column -t --separator ","

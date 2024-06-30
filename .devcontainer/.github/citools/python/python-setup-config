@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# .github/citools/python/python-setup-config
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+main() {
+	printf "Setup Python Environment\n\n"
+
+	print_ruler
+
+	../../.github/citools/common/gh-setup-env || track_errors
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"
