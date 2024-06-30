@@ -254,3 +254,9 @@ printf "serial: "
 cat /dev/ttyACM0 | head -n 2
 printf "\n"
 ```
+
+## Experiments
+
+### [Hello Blink Pico in C](hello_blink-pico-c)
+
+This experiment blinks the LED on the Raspberry Pi Pico board using the C Pico SDK.
