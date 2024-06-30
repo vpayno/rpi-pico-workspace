@@ -1,0 +1,3 @@
+[submodule "assembly_c_c++/pico-sdk"]
+	path = assembly_c_c++/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk
