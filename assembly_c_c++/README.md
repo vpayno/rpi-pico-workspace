@@ -33,6 +33,86 @@ To put the Pico/Pico W in update mode,
 - connect the usb cable
 - let go of the `BOOTSEL` Button
 
+## Pico SDK CLI commands
+
+Compile and export the the bin, elf and uf2 files to `./build/rp2040.rp2040.adafruit_kb2040/`.
+
+```bash { background=false category=build-picosdk closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=picosdk-cli-compile promptEnv=true terminalRows=25 }
+# choose a pico sdk project and build it
+
+set -e
+
+# all paths are relative to the /assembly_c_c++ directory
+
+stty cols 80
+stty rows 25
+
+# -DPICO_SDK_PATH="../pico-sdk"
+# path from build directory
+declare -x PICO_SDK_PATH="../pico-sdk"
+
+declare WD
+
+gum format "# Please choose a Pico SDK project to build:"
+printf "\n"
+WD="$(gum choose $(dirname $(find ./ -maxdepth 2 -type l -name pico-sdk | grep -v -E '^[.][/]$')))"
+
+cd "${WD}" || exit 1
+pwd
+ls
+printf "\n"
+
+rm -rf build
+mkdir -pv build
+cd build
+cmake ..
+make
+printf "\n"
+
+ls -lh ./*.elf ./*.uf2
+printf "\n"
+```
+
+Upload the desired UF2 file to the Pico board.
+
+Note: Before you can update the board, you need to put the Pico in update mode.
+
+```bash { background=false category=deploy-picosdk closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=picosdk-cli-upload promptEnv=true terminalRows=25 }
+# choose a pico sdk project and deploy it
+
+if [[ ! -d /mnt/chromeos/removable/RPI-RP2/ ]]; then
+    printf "ERROR: You need to share the RPI-RP2 volume with Linux\n"
+    exit 1
+fi
+
+if [[ ! -f /mnt/chromeos/removable/RPI-RP2/INFO_UF2.TXT ]]; then
+    printf "ERROR: Board isn't in UF2 update mode\n"
+    exit 1
+fi
+
+set -e
+
+# all commands are relative to the /assembly_c_c++ directory
+
+stty cols 80
+stty rows 25
+
+declare SF
+declare TD
+
+gum format "# Please choose a UF2 Pico SDK firmware file to deploy:"
+printf "\n"
+SF="$(gum choose $(find ./ -maxdepth 3 -type f -name '*.uf2' | grep -v -E '^[.][/]$'))"
+
+gum format "# Please choose the deploy target directory:"
+printf "\n"
+TD="$(gum choose $(find /mnt/chromeos/removable/ -maxdepth 1 -type d | grep -v -E '^/mnt/chromeos/removable/$'))"
+
+echo "Running: cp -v ${SF} ${TD}"
+cp -v "${SF}" "${TD}"
+echo done.
+```
+
 ## Demos
 
 ### Blink
