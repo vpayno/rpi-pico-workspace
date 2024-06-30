@@ -264,3 +264,7 @@ This experiment blinks the LED on the Raspberry Pi Pico board using the C Pico S
 ### [Hello Blink for Pico W in C](hello_blink-picow-c)
 
 This experiment blinks the LED on the Raspberry Pi Pico W board using the C Pico SDK.
+
+### [Hello Serial Pico in C](hello_serial-pico-c)
+
+This experiment blinks the LED and prints to the serial console on the Raspberry Pi Pico board using the C Pico SDK.
