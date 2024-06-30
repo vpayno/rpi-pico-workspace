@@ -24,6 +24,10 @@ Personal Raspberry Pi Pico/Pico W workspace for learning Arduino, C/C++, CircutP
 - [Rust](https://crates.io/crates/rp-pico)
 - [TinyGo](https://tinygo.org/docs/reference/microcontrollers/pico/)
 
+## Experiments
+
+- [Pico SDK](./assembly_c_c++/README.md)
+
 ## RunMe Playbook
 
 This and other readme files in this repo are RunMe Playbooks.

@@ -45,6 +45,7 @@ export default {
         'feat',
         'fix',
         'perf',
+        'picosdk',
         'refactor',
         'release',
         'revert',
@@ -143,6 +144,21 @@ export default {
             description: 'Reverts a previous commit',
             title: 'Reverts',
             emoji: '🗑',
+          },
+          devcontainer: {
+            description: 'Dev Container related commit',
+            title: 'Dev-Container',
+            emoji: '🧰',
+          },
+          debug: {
+            description: 'Debugging related commit',
+            title: 'Debugging',
+            emoji: '🐛',
+          },
+          picosdk: {
+            description: 'Pico SDK project commit',
+            title: 'PicoSDK',
+            emoji: '🍓',
           },
         },
         scope: {
