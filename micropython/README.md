@@ -26,6 +26,12 @@ MicroPython update play.
 
 To update the board, it needs to be in update mode.
 
+After the update, the USB device will look like this:
+
+```text
+Bus 001 Device 003: ID 2e8a:0005 MicroPython Board in FS mode
+```
+
 ```bash { background=false category=micropython-setup closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=micropython-fw-install promptEnv=true terminalRows=25 }
 # install/update the micropython firmware on the pico/pico w
 
@@ -93,4 +99,80 @@ printf "Running: %s\n" "cp -v ./fw/${uf2_url##*/} ${TD}/"
 cp -v "./fw/${uf2_url##*/}" "${TD}/"
 printf "done.\n"
 printf "\n"
+```
+
+## MicroPython CLI commands
+
+### rshell
+
+To install `rshell` run:
+
+```bash { background=false category=micropython-setup closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=micropython-install-rshell promptEnv=true terminalRows=25 }
+pip install --upgrade rshell
+```
+
+`rshell` commands:
+
+- args: Debug function for verifying argument parsing. This function just prints out each argument that it receives.
+- boards: Lists all of the boards that rshell is currently connected to, their names, and the connection.
+- cat: Concatenates files and sends to stdout.
+- cd: Changes the current directory. ~ expansion is supported, and cd - goes to the previous directory.
+- connect: Connects a pyboard to rshell. rshell can be connected to multiple pyboards simultaneously.
+- cp: Copies the SOURCE file to DEST. DEST may be a filename or a directory name. If more than one source file is specified, then the destination should be a directory.
+- date: Displays and set date on board.
+- echo: Display a line of text.
+- edit: If the file is on a pyboard, it copies the file to host, invokes an editor and if any changes were made to the file, it copies it back to the pyboard.
+- exit: Exit the rshell.
+- filesize: Prints the size of the file, in bytes. This function is primarily testing.
+- filetype: Prints the type of file (dir or file). This function is primarily for testing.
+- help: List available commands with no arguments, or detailed help when a command is provided.
+- ls: Pattern matching is performed according to a subset of the Unix rules (see below).
+- mkdir: Creates one or more directories.
+- repl: Enters into the regular repl with the MicroPython board.
+- rm: Deletes a file.
+- rsync: Syncs files between host and board.
+- shell: Runs a special, limited shell.
+
+List available boards:
+
+```bash { background=false category=micropython-rshell closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=micropython-rshell-list promptEnv=true terminalRows=25 }
+# list available boards
+
+set -e
+
+# all paths are relative to the /micropython directory
+
+stty cols 80
+stty rows 25
+
+declare SD
+
+gum format "# Please choose the pico device:"
+printf "\n"
+SD="$(gum choose $(find /dev -name 'ttyACM*' -not -path '/dev/.lxc/*' 2>/dev/null | sort -V))"
+printf "\n"
+
+rshell -p "${SD}" --buffer-size 512 boards
+```
+
+To start an interactive REPL:
+
+```bash { background=false category=micropython-rshell closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=micropython-rshell-repl promptEnv=true terminalRows=25 }
+# run repl on a pico
+
+set -e
+
+# all paths are relative to the /micropython directory
+
+stty cols 80
+stty rows 25
+
+declare SD
+
+gum format "# Please choose the pico device:"
+printf "\n"
+SD="$(gum choose $(find /dev -name 'ttyACM*' -not -path '/dev/.lxc/*' 2>/dev/null | sort -V))"
+printf "\n"
+
+rshell -p "${SD}" --buffer-size 512 repl pyboard
 ```
