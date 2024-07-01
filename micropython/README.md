@@ -217,3 +217,9 @@ printf "\n"
 rshell -p "${SD}" --buffer-size 512 repl pyboard
 printf "\n"
 ```
+
+## Experiments
+
+### [Hello World](helloworld)
+
+This experiment blinks the LED on the Raspberry Pi Pico/Pico W boards using MicroPython.
