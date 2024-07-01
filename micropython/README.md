@@ -223,3 +223,7 @@ printf "\n"
 ### [Hello World](helloworld)
 
 This experiment blinks the LED on the Raspberry Pi Pico/Pico W boards using MicroPython.
+
+### [Hello Pico](hellopico)
+
+This slightly more complicated experiment blinks the LED on the Raspberry Pi Pico/Pico W boards using MicroPython.
