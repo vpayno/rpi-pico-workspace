@@ -176,3 +176,44 @@ printf "\n"
 
 rshell -p "${SD}" --buffer-size 512 repl pyboard
 ```
+
+I'm still trying to figure out how to get Python code to run on MicroPython without having to "send" an EOF to the REPL.
+
+Push and run selected code on the Pico board:
+
+```bash { background=false category=micropython-rshell closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=micropython-rshell-deploy promptEnv=true terminalRows=25 }
+# deploy code to the pico
+
+set -e
+
+# all paths are relative to the /micropython directory
+
+stty cols 80
+stty rows 25
+
+declare SD
+declare TF
+
+gum format "# Please choose the target MicroPmicropython/helloworld/main.pyython device:"
+printf "\n"
+SD="$(gum choose $(find /dev -name 'ttyACM*' -not -path '/dev/.lxc/*' 2>/dev/null | sort -V))"
+printf "\n"
+
+gum format "# Please choose the main.py you want to deploy:"
+printf "\n"
+TF="$(gum choose ./*/main.py)"
+printf "\n"
+
+rshell -p "${SD}" --buffer-size 512 cp "${TF}" /pyboard/main.py
+printf "\n"
+
+sleep 2s
+
+# can't "send" and EOF to the REPL to restart it
+
+printf "INFO: Press ctrl-d to restart repl\n"
+printf "INFO: Press ctrl-x to detach from the rshell\n"
+printf "\n"
+rshell -p "${SD}" --buffer-size 512 repl pyboard
+printf "\n"
+```
