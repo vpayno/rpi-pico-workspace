@@ -55,7 +55,7 @@ jobs:
             # Check if the files are present in the changed file list (added, modified, deleted) then output to stdout.
             HAS_DIFF=false
             printf "=== Which Dev Container files changed? ===\n"
-            if printf "%s\n" "${GIT_DIFF}" | grep -E '^([.]devcontainer|.github/workflows/devcontainer.yaml)$'; then
+            if printf "%s\n" "${GIT_DIFF}" | grep -E '^([.]devcontainer/.*|.github/workflows/devcontainer.yaml)$'; then
               HAS_DIFF=true
             fi
             printf "\n"
