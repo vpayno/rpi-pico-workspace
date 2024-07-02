@@ -4,3 +4,6 @@
 [submodule "assembly_c_c++/pico-examples"]
 	path = assembly_c_c++/pico-examples
 	url = https://github.com/raspberrypi/pico-examples
+[submodule "assembly_c_c++/picotool"]
+	path = assembly_c_c++/picotool
+	url = https://github.com/raspberrypi/picotool

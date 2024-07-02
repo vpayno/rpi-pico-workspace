@@ -18,10 +18,31 @@ Install dependencies:
 nala install -y --no-auto-remove gdb-multiarch automake autoconf build-essential texinfo libtool libftdi-dev libusb-1.0-0-dev
 ```
 
+Update pico-sdk submodule:
+
 ```bash { background=false category=install-picosdk closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=install-picosdk-update promptEnv=true terminalRows=25 }
 cd pico-sdk
 git pull
 git submodule update --init
+```
+
+Update picotool submodule:
+
+```bash { background=false category=install-picotool closeTerminalOnSuccess=true excludeFromRunAll=true interactive=true interpreter=bash name=install-picotool promptEnv=true terminalRows=25 }
+declare -x PICO_SDK_PATH="../../pico-sdk"
+cd picotool
+git pull
+rm -rf build
+mkdir build
+cd build
+cmake ..
+make
+pwd
+ls
+cp -v picotool ~/bin/
+cd -
+rm -rf build
+picotool version
 ```
 
 ## Updating the Pico

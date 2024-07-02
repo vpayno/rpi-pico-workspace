@@ -48,6 +48,7 @@ main() {
 		# /etc/profile.d/rpidev.sh
 		#
 
+		export PICO_SDK_PATH="/usr/local/pico-sdk"
 	EOF
 	printf "done\n"
 
@@ -130,6 +131,39 @@ main() {
 	time for npm_pkg in "${npm_pkgs[@]}"; do
 		npm install -g "${npm_pkg}"
 	done
+
+	print_ruler
+
+	cd /usr/local/ || track_errors
+	pwd
+	printf "\n"
+
+	git clone https://github.com/raspberrypi/pico-sdk || track_errors
+	cd pico-sdk || track_errors
+	git submodule update --init
+	cd - || track_errors
+	printf "\n"
+
+	export PICO_SDK_PATH="/usr/local/pico-sdk"
+
+	git clone https://github.com/raspberrypi/picotool || track_errors
+	cd picotool || track_errors
+	mkdir build
+	cd build || track_errors
+	cmake ..
+	make
+	printf "\n"
+
+	cp -v picotool /usr/local/bin/
+	printf "\n"
+
+	picotool version
+	printf "\n"
+
+	cd .. || track_errors
+	rm -rf build || track_errors
+	cd .. || track_errors
+	printf "\n"
 
 	print_ruler
 
