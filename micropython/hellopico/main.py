@@ -7,7 +7,7 @@ from machine import Pin, Timer
 
 
 # determine if we are running on a Pico or PicoW
-def is_picow():
+def is_picow_old():
     try:
         import network
     except ImportError:
@@ -20,6 +20,17 @@ def is_picow():
     return True
 
 
+def is_picow():
+    #  pico: (name='micropython', version=(1, 23, 0, ''), _machine='Raspberry Pi Pico with RP2040', _mpy=4870)
+    # picow: (name='micropython', version=(1, 23, 0, ''), _machine='Raspberry Pi Pico W with RP2040', _mpy=4870)
+    hw_label = sys.implementation[2]
+
+    if hw_label == "Raspberry Pi Pico W with RP2040":
+        return True
+
+    return False
+
+
 has_wifi = is_picow()
 
 led = Pin("LED", Pin.OUT)
@@ -27,6 +38,9 @@ timer = Timer()
 
 
 def hello_pico():
+    print(sys.implementation)
+    print()
+
     if has_wifi:
         print("Hello Pico W!\n")
     else:
