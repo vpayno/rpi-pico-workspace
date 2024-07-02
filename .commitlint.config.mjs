@@ -45,6 +45,7 @@ export default {
         'feat',
         'fix',
         'micropython',
+        'circuitpython',
         'perf',
         'picosdk',
         'refactor',
@@ -164,6 +165,11 @@ export default {
           micropython: {
             description: 'MicroPython project commit',
             title: 'MicroPython',
+            emoji: '🐍',
+          },
+          circuitpython: {
+            description: 'CircuitPython project commit',
+            title: 'CircuitPython',
             emoji: '🐍',
           },
         },

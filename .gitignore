@@ -43,3 +43,6 @@ build/
 .venv
 .mypy_cache
 boot_out.txt
+secrets.json
+settings.toml
+secrets.py
