@@ -324,3 +324,9 @@ printf "Running: %s\n" "sync ${TD}"
 sync "${TD}"
 printf "\n"
 ```
+
+## Experiments
+
+### [Hello Pico](hellopico)
+
+This experiment blinks the LED on the Raspberry Pi Pico/Pico W boards using CircuitPython.
