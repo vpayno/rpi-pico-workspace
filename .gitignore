@@ -46,3 +46,6 @@ boot_out.txt
 secrets.json
 settings.toml
 secrets.py
+
+# Arduino
+build

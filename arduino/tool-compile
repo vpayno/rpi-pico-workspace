@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo Running: arduino-cli compile . -p /dev/ttyAMC0 --fqbn rp2040:rp2040:rpipicow --verbose --export-binaries
+arduino-cli compile . -p /dev/ttyAMC0 --fqbn rp2040:rp2040:rpipicow --verbose --export-binaries
+printf "\n"
+
+ls -lhv ./build
+printf "\n"
+
+tree ./build
+printf "\n"

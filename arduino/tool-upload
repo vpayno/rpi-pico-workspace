@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [[ ! -d /mnt/chromeos/removable/RPI-RP2/ ]]; then
+	printf "ERROR: You need to share the RPI-RP2 volume with Linux\n"
+	exit 1
+fi
+
+if [[ ! -f /mnt/chromeos/removable/RPI-RP2/INFO_UF2.TXT ]]; then
+	printf "ERROR: Board isn't in UF2 update mode\n"
+	exit 1
+fi
+
+if [[ ! -d ./build ]]; then
+	printf "ERROR: Build artifacts are missing\n"
+	exit 1
+fi
+
+tree ./build
+printf "\n"
+
+ls -lhv ./build/*
+printf "\n"
+
+echo Running: cp -v ./build/rp2040.rp2040.adafruit_kb2040/*uf2 /mnt/chromeos/removable/RPI-RP2/
+cp -v ./build/rp2040.rp2040.adafruit_kb2040/*uf2 /mnt/chromeos/removable/RPI-RP2/
+echo done.

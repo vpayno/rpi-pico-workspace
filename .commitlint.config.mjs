@@ -36,6 +36,7 @@ export default {
       2,
       'always',
       [
+        'arduino',
         'build',
         'chore',
         'ci',
@@ -171,6 +172,11 @@ export default {
             description: 'CircuitPython project commit',
             title: 'CircuitPython',
             emoji: '🐍',
+          },
+          arduino: {
+            description: 'Arduino project commit',
+            title: 'Arduino',
+            emoji: '♾',
           },
         },
         scope: {
