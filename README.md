@@ -18,6 +18,7 @@ Personal Raspberry Pi Pico/Pico W workspace for learning Arduino, C/C++, CircutP
 - [Pinout Diagram](https://datasheets.raspberrypi.com/pico/Pico-R3-A4-Pinout.pdf)
 - [Connecting to the Internet](https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf)
 - [Pico W BTStack](https://github.com/bluekitchen/btstack#welcome-to-btstack)
+- [RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)
 - [Arduino](https://arduino-pico.readthedocs.io/en/latest/)
 - [C/C++](https://www.raspberrypi.com/documentation/microcontrollers/c_sdk.html)
 - [CircuitPython for Pico W](https://circuitpython.org/board/raspberry_pi_pico_w/)
