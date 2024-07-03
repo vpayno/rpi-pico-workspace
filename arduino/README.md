@@ -208,3 +208,9 @@ echo Running: cp -v ./build/rp2040.rp2040.rpipicow/*uf2 "${TD}"
 cp -v ./build/rp2040.rp2040.rpipicow/*uf2 "${TD}"
 echo done.
 ```
+
+## Experiments
+
+### [Hello Pico](hellopico/)
+
+This experiment uses the example Raspberry Pi Pico/Pico W blink and serial sketch.
