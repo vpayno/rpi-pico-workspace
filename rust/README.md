@@ -194,3 +194,14 @@ first before adding it to the project `Cargo.toml`.
 
 All the projects also share the top level `/memory.x` file and
 `.cargo/config.toml` files.
+
+## Experiments
+
+### [Hello World](helloworld/)
+
+Added the two examples from [rp-hal-boards](https://github.com/rp-rs/rp-hal-boards/) to help with tooling testing.
+The lack of a serial console isn't great for debugging.
+
+#### `rpi-pico-blink.rs`
+
+Bare minimum program that blinks.
