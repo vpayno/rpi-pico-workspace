@@ -33,6 +33,7 @@ Personal Raspberry Pi Pico/Pico W workspace for learning Arduino, C/C++, CircutP
 - [Pico SDK](./assembly_c_c++/README.md)
 - [CircuitPython](./circuitpython/README.md)
 - [MicroPython](./micropython/README.md)
+- [Rust](./rust/README.md)
 
 ## RunMe Playbook
 

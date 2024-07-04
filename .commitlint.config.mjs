@@ -52,6 +52,7 @@ export default {
         'refactor',
         'release',
         'revert',
+        'rust',
         'security',
         'style',
         'test',
@@ -177,6 +178,11 @@ export default {
             description: 'Arduino project commit',
             title: 'Arduino',
             emoji: '♾',
+          },
+          rust: {
+            description: 'Rust project commit',
+            title: 'Rust',
+            emoji: '🦀',
           },
         },
         scope: {
