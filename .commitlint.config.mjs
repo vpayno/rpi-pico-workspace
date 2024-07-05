@@ -56,6 +56,7 @@ export default {
         'security',
         'style',
         'test',
+        'tinygo',
         'types',
         'wip',
         'workflow'
@@ -183,6 +184,11 @@ export default {
             description: 'Rust project commit',
             title: 'Rust',
             emoji: '🦀',
+          },
+          tinygo: {
+            description: 'TinyGo project commit',
+            title: 'TinyGo',
+            emoji: '🇬',
           },
         },
         scope: {

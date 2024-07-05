@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [[ ! -f go.mod ]]; then
+	printf "ERROR: run this script from inside the experiment's project folder.\n"
+	exit 1
+fi
+
+# shellcheck disable=SC1091
+source ../env-setup.sh
+
+exec tinygo-edit --editor="${1:-vim}" --target=pico --wait

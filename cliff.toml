@@ -79,6 +79,7 @@ commit_parsers = [
   { message = "^circuitpython", group = "<!-- 16 -->🐍 CircuitPython" },
   { message = "^arduino", group = "<!-- 17 -->♾ Arduino" },
   { message = "^rust", group = "<!-- 18 -->🦀 Rust" },
+  { message = "^tinygo", group = "<!-- 19 -->🇬 TinyGo" },
 ]
 # protect breaking changes from being skipped due to matching a skipping commit_parser
 protect_breaking_commits = false
