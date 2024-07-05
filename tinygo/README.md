@@ -13,6 +13,8 @@ Journaling [Raspberry Pi Pico/Pico W TinyGo](https://tinygo.org/docs/reference/m
 - [TinyGo Tutorial](https://tinygo.org/docs/tutorials/)
 - [TinyGo Documentation](https://tinygo.org/docs/)
 - [TinyGo Drivers](https://github.com/tinygo-org/drivers)
+- [TinyGo PicoW Examples](https://github.com/soypat/cyw43439/)
+- [TinyGo Machine Docs](https://tinygo.org/docs/reference/microcontrollers/machine/pico/)
 
 ## Installing Tools
 
@@ -156,10 +158,14 @@ echo done.
 
 ## Experiments
 
-### [Hello World](helloworld/)
-
-Using the official [TinyGo Tutorial](https://tinygo.org/docs/tutorials/) for this experiment.
-
 Current LSP setup, linting, etc, not working very well with TinyGo.
 I got most of my debugging help from `tinygo build`.
 Still, Arduino and TinyGo seems like the best options for me so far.
+
+### [Hello Pico](hellopico/)
+
+Using the official [TinyGo Tutorial](https://tinygo.org/docs/tutorials/) for this experiment.
+
+### [Hello Pico W](hellopicow/)
+
+Using the [cyw43439 blinky example](https://github.com/soypat/cyw43439/blob/main/examples/blinky/blinky.go) for this experiment.

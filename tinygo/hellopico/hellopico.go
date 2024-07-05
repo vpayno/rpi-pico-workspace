@@ -1,4 +1,4 @@
-// This is a hello world experiment using the neopixel.
+// This is a hello world experiment using the onboard led.
 package main
 
 import (
@@ -10,7 +10,6 @@ import (
 func main() {
 	fmt.Println("Raspberry Pi Pico/Pico W Hello World LED Blinker")
 
-	// https://learn.adafruit.com/adafruit-kb2040/pinouts
 	var led machine.Pin = machine.LED
 	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
 
