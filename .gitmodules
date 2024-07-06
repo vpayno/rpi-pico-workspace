@@ -7,3 +7,6 @@
 [submodule "assembly_c_c++/picotool"]
 	path = assembly_c_c++/picotool
 	url = https://github.com/raspberrypi/picotool
+[submodule "tinygo/lib/drivers"]
+	path = tinygo/lib/drivers
+	url = https://github.com/tinygo-org/drivers
