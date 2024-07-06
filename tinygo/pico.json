@@ -1,15 +1,19 @@
 {
-  "inherits": [
-    "atsamd51j20a"
-  ],
-  "build-tags": [
-    "pico"
-  ],
-  "serial": "usb",
-  "flash-1200-bps-reset": "true",
-  "flash-method": "msd",
-  "serial-port": [
-    "239a:8035",
-    "239a:8036"
-  ]
+    "inherits": [
+        "rp2040"
+    ],
+    "build-tags": [
+        "pico"
+    ],
+    "serial": "usb",
+    "serial-port": [
+        "2e8a:000A"
+    ],
+    "default-stack-size": 8192,
+    "ldflags": [
+        "--defsym=__flash_size=2048K"
+    ],
+    "extra-files": [
+        "targets/pico-boot-stage2.S"
+    ]
 }
