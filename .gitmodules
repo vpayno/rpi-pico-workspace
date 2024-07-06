@@ -10,3 +10,6 @@
 [submodule "tinygo/lib/drivers"]
 	path = tinygo/lib/drivers
 	url = https://github.com/tinygo-org/drivers
+[submodule "tinygo/lib/tinygo"]
+	path = tinygo/lib/tinygo
+	url = https://github.com/tinygo-org/tinygo
