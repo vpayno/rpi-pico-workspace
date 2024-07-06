@@ -13,3 +13,6 @@
 [submodule "tinygo/lib/tinygo"]
 	path = tinygo/lib/tinygo
 	url = https://github.com/tinygo-org/tinygo
+[submodule "tinygo/lib/cyw43439"]
+	path = tinygo/lib/cyw43439
+	url = https://github.com/soypat/cyw43439
