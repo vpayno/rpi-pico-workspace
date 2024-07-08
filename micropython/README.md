@@ -194,7 +194,7 @@ stty rows 25
 declare SD
 declare TF
 
-gum format "# Please choose the target MicroPmicropython/helloworld/main.pyython device:"
+gum format "# Please choose the target MicroPmicropython/helloworld/main.py python device:"
 printf "\n"
 SD="$(gum choose $(find /dev -name 'ttyACM*' -not -path '/dev/.lxc/*' 2>/dev/null | sort -V))"
 printf "\n"
@@ -204,6 +204,15 @@ printf "\n"
 TF="$(gum choose ./*/main.py)"
 printf "\n"
 
+if [[ -e ${TF//main.py/appsecrets.py} ]]; then
+	declare secrets_src
+	declare secrets_tgt
+
+	secrets_src="${TF//main.py/appsecrets.py}"
+	secrets_tgt="/pyboard/$(basename "${TF//main.py/appsecrets.py}")"
+
+	rshell -p "${SD}" --buffer-size 512 cp "${secrets_src}" "${secrets_tgt}"
+fi
 rshell -p "${SD}" --buffer-size 512 cp "${TF}" /pyboard/main.py
 printf "\n"
 
@@ -227,3 +236,7 @@ This experiment blinks the LED on the Raspberry Pi Pico/Pico W boards using Micr
 ### [Hello Pico](hellopico)
 
 This slightly more complicated experiment blinks the LED on the Raspberry Pi Pico/Pico W boards using MicroPython.
+
+### [Hello Wifi](hellowifi)
+
+Pico W blink example that also connects to WiFi using secrets.
